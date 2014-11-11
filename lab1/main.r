@@ -28,7 +28,7 @@ plotPerceptronSteps <- function(pcResult, dm, dc, steps) {
 }
 
 # Prepare data
-dd <- read.table("data07.csv", sep=';', head=FALSE)
+dd <- read.table("data07.csv", sep=',', head=FALSE)
 dm <- data.matrix(dd[, 1:2])
 dm <- cbind(dm,1)
 dc <- rep(1, nrow(dm))
