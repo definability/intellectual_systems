@@ -1,4 +1,5 @@
 library(monmlp)
+library(caret)
 source("functions.r")
 
 # http://stackoverflow.com/a/1173161/1305036
@@ -16,28 +17,27 @@ dc[iris$Species == 'versicolor'] <- 0
 # Append numbers to iris dataset
 sample <- cbind(iris, dc)
 
-# Divide sample into training and test sample for each class separately
-# to avoid irregularity
-samples <- mapply(splitdf,
-    Map(function(x) sample[sample$Species == x,], unique(sample[,"Species"])))
-# Concatenate training samples
-training_sample <- Reduce(function(x,y) {rbind(x,y)}, samples["trainset",])
-# Concatenate test samples
-test_sample <- Reduce(function(x,y) {rbind(x,y)}, samples["testset",])
+# Prepare training and test samples
+training_indices <- createDataPartition(sample$Species, p = .2, list = FALSE)
+training_sample  <- sample[ training_indices,]
+test_sample      <- sample[-training_indices,]
 
 # Train the network
-ft <- monmlp.fit(x=as.matrix(training_sample[1:4]), y=as.matrix(training_sample[6]), hidden1=3)
+ft <- monmlp.fit(x=as.matrix(training_sample[1:4]),
+                     y=as.matrix(training_sample[6]),
+                     hidden1=1)
 # Try to predict
-pt <- monmlp.predict(x=as.matrix(test_sample[1:4]), weights = ft)
+pt <- monmlp.predict(x=as.matrix(test_sample[1:4]),
+                     weights = ft)
 
 # Translate numbers to classes
-result <- mapply(cov_to_result, pt)
+result     <- mapply(cov_to_result, pt)
 # Concatenate source and fit data
 cmp_result <- cbind(test_sample, Result=result, Cov=round(pt,1))
 # Calculate correct answers
-correct <- calculate_correct_answers(cmp_result$Species, cmp_result$Result)
+correct    <- calculate_correct_answers(cmp_result$Species, cmp_result$Result)
 # Store the length of test sample
-total <- nrow(cmp_result)
+total      <- nrow(cmp_result)
 
 print("Here is comparison matrix")
 cmp_result
