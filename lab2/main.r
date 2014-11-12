@@ -19,7 +19,7 @@ sample <- cbind(iris, dc)
 # Divide sample into training and test sample for each class separately
 # to avoid irregularity
 samples <- mapply(splitdf,
-                      Map(function(x) sample[sample$Species == x,], unique(sample[,"Species"])))
+    Map(function(x) sample[sample$Species == x,], unique(sample[,"Species"])))
 # Concatenate training samples
 training_sample <- Reduce(function(x,y) {rbind(x,y)}, samples["trainset",])
 # Concatenate test samples
@@ -42,8 +42,8 @@ total <- nrow(cmp_result)
 print("Here is comparison matrix")
 cmp_result
 cat("You've got", correct,
-        "corrrect answers of", total,
-            "which is", round(100*correct/total,2),
-                "%\n")
+    "corrrect answers of", total,
+    "which is", round(100*correct/total,2),
+    "%\n")
 # Log the correctness to stderr
 write(round(100*correct/total,2), stderr())
