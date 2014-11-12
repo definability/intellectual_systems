@@ -9,20 +9,22 @@ trainPerceptron <- function(dm, dc) {
     w <- rep(0, ncol(dm))
     while (!identical(w, oldW)) {
         oldW <- w
+        cat(w, "\n")
         for (i in 1:nrow(dm)) {
             pred <- sign(dm[i,] %*% w)
             w = w + (dc[i] - pred) * dm[i, ]
         }
-        # cat(w, "\n")
         result <- c(result, list(w))
     }
     result
 }
 
+# TODO: use ggplot2
 plotPerceptronSteps <- function(pcResult, dm, dc, steps) {
     for (s in steps) {
         w <- pcResult[[s]]
-        plot(dm[,1:2], main=paste("step", s), pch=ifelse(dc > 0, 1, 2), sub=paste(w, collapse='; '))
+        plot(dm[,1:2], main=paste("step", s), pch=ifelse(dc > 0, 1, 2),
+             sub=paste(w, collapse='; '))
         abline(-w[3] / w[2], -w[1] / w[2])
     }
 }

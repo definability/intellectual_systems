@@ -1,5 +1,6 @@
 # https://github.com/earowang/statsR/blob/master/splitDf.R
 # Divide sample into test and training
+# createDataPartition
 splitdf <- function(dataframe, seed=NULL) {
     if (!is.null(seed)) set.seed(seed)
     index <- 1:nrow(dataframe)
